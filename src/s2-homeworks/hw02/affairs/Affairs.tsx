@@ -6,8 +6,9 @@ import s from './Affairs.module.css'
 type AffairsPropsType = {
     data: Array<AffairType>// need to fix any
     setFilter: (filter:FilterType)=> void
-    deleteAffairCallback: (id: number)=> void
+    deleteAffairCallback: (_id: number)=> AffairType[]
     filter: FilterType
+    setAffairs:(filter:Array<AffairType>)=>void
 }
 
 function Affairs(props: AffairsPropsType) {
@@ -38,6 +39,7 @@ props.setFilter('all')
             key={a._id} // кеи ОБЯЗАТЕЛЬНЫ в 99% - так что лучше их писать всегда при создании компонент в мапе
             affair={a}
             deleteAffairCallback={props.deleteAffairCallback}
+            setAffairs={props.setAffairs}
         />
     ))
 
