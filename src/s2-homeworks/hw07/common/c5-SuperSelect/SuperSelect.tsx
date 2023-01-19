@@ -1,7 +1,7 @@
 import React, {
     SelectHTMLAttributes,
     DetailedHTMLProps,
-    ChangeEvent,
+    ChangeEvent, useEffect,
 } from 'react'
 import s from './SuperSelect.module.css'
 
@@ -20,19 +20,23 @@ const SuperSelect: React.FC<SuperSelectPropsType> = ({
     className,
     onChange,
     onChangeOption,
+
     ...restProps
 }) => {
     const mappedOptions: any[] = options
-        ? options.map((o) => (
-              <option
-                  id={'hw7-option-' + o.id}
-                  className={s.option}
-                  key={o.id}
-                  value={o.id}
-              >
-                  {o.value}
-              </option>
-          ))
+        ? options.map((o) => {
+
+            return (
+                <option
+                    id={'hw7-option-' + o.id}
+                    className={s.option}
+                    key={o.id}
+                    value={o.id}
+                >
+                    {o.value}
+                </option>
+            )
+        })
         : [] // map options with key
 
     const onChangeCallback = (e: ChangeEvent<HTMLSelectElement>) => {
@@ -42,6 +46,19 @@ const SuperSelect: React.FC<SuperSelectPropsType> = ({
 
         // делают студенты
     }
+
+    useEffect(() => {
+
+        const options = document.querySelectorAll('option')
+
+        options.forEach(opt => {
+            if ( +opt.value === restProps.value) {
+                opt.setAttribute('selected', 'selected')
+            }else {
+                opt.removeAttribute('selected')
+            }
+        })
+    },[restProps.value])
 
     const finalSelectClassName = s.select + (className ? ' ' + className : '')
 

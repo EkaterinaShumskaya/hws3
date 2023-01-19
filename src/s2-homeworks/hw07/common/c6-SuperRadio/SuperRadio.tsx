@@ -2,7 +2,7 @@ import React, {
     ChangeEvent,
     InputHTMLAttributes,
     DetailedHTMLProps,
-    HTMLAttributes,
+    HTMLAttributes, useEffect,
 } from 'react'
 import s from './SuperRadio.module.css'
 import {idID} from "@mui/material/locale";
@@ -41,12 +41,15 @@ const SuperRadio: React.FC<SuperRadioPropsType> = ({
 
         // делают студенты
     }
+    console.log(options)
+    console.log(value)
 
     const finalRadioClassName = s.radio + (className ? ' ' + className : '')
     const spanClassName = s.span + (spanProps?.className ? ' ' + spanProps.className : '')
 
     const mappedOptions: any[] = options
         ? options.map((o) => {
+
             return (
                 <label key={name + '-' + o.id} className={s.label}>
                     <input
@@ -54,7 +57,6 @@ const SuperRadio: React.FC<SuperRadioPropsType> = ({
                         className={finalRadioClassName}
                         type={'radio'}
                         name={"radioN"}
-                        checked={o.id === value}
                         value={o.id}
                         // name, checked, value делают студенты
 
@@ -72,6 +74,20 @@ const SuperRadio: React.FC<SuperRadioPropsType> = ({
             )
         })
         : []
+
+    useEffect(() => {
+
+        const inputs = document.querySelectorAll('input[type="radio"]')
+
+        inputs.forEach(input => {
+            //@ts-ignore
+            if ( +input.value === value) {
+                input.setAttribute('checked', 'checked')
+            }else {
+                input.removeAttribute('checked')
+            }
+        })
+    },[value])
 
     return <div className={s.options}>{mappedOptions}</div>
 }
