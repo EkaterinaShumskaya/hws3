@@ -9,7 +9,22 @@
 }
 
 .label {
+    display: flex;
+    align-items: center;
+    gap: 13px;
 }
 
 .options {
+    display: flex;
+    flex-direction: column;
+    gap: 22px;
+}
+
+.span {
+    font-family: 'Montserrat';
+    font-style: normal;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 20px;
+    color: #000000;
 }

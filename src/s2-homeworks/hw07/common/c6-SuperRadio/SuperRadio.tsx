@@ -2,10 +2,9 @@ import React, {
     ChangeEvent,
     InputHTMLAttributes,
     DetailedHTMLProps,
-    HTMLAttributes, useEffect,
+    HTMLAttributes,
 } from 'react'
 import s from './SuperRadio.module.css'
-import {idID} from "@mui/material/locale";
 
 type DefaultRadioPropsType = DetailedHTMLProps<
     InputHTMLAttributes<HTMLInputElement>,
@@ -25,69 +24,51 @@ type SuperRadioPropsType = Omit<DefaultRadioPropsType, 'type'> & {
 }
 
 const SuperRadio: React.FC<SuperRadioPropsType> = ({
-    id,
-    name,
-    className,
-    options,
-    value,
-    onChange,
-    onChangeOption,
-    spanProps,
-    ...restProps
-
-}) => {
+                                                       id,
+                                                       name,
+                                                       className,
+                                                       options,
+                                                       value,
+                                                       onChange,
+                                                       onChangeOption,
+                                                       spanProps,
+                                                       ...restProps
+                                                   }) => {
     const onChangeCallback = (e: ChangeEvent<HTMLInputElement>) => {
-       onChangeOption?.(+e.currentTarget.value)
+        console.log(e.currentTarget.name)
+        onChangeOption && onChangeOption(e.currentTarget.value)
 
         // делают студенты
     }
-    console.log(options)
-    console.log(value)
 
     const finalRadioClassName = s.radio + (className ? ' ' + className : '')
     const spanClassName = s.span + (spanProps?.className ? ' ' + spanProps.className : '')
 
     const mappedOptions: any[] = options
-        ? options.map((o) => {
+        ? options.map((o) => (
+            <label key={name + '-' + o.id} className={s.label}>
+                <input
+                    id={id + '-input-' + o.id}
+                    className={finalRadioClassName}
+                    type={'radio'}
+                    name={name}
+                    checked={o.id === Number(value)}
+                    value={o.id}
+                    // name, checked, value делают студенты
 
-            return (
-                <label key={name + '-' + o.id} className={s.label}>
-                    <input
-                        id={id + '-input-' + o.id}
-                        className={finalRadioClassName}
-                        type={'radio'}
-                        name={"radioN"}
-                        value={o.id}
-                        // name, checked, value делают студенты
-
-                        onChange={onChangeCallback}
-                        {...restProps}
-                    />
-                    <span
-                        id={id + '-span-' + o.id}
-                        {...spanProps}
-                        className={spanClassName}
-                    >
+                    onChange={onChangeCallback}
+                    {...restProps}
+                />
+                <span
+                    id={id + '-span-' + o.id}
+                    {...spanProps}
+                    className={spanClassName}
+                >
                       {o.value}
                   </span>
-                </label>
-            )
-        })
+            </label>
+        ))
         : []
-
-    useEffect(() => {
-
-        const inputs = document.querySelectorAll('input[type="radio"]')
-
-        inputs.forEach(input => {
-            //@ts-ignore
-            if ( +input.value === value) {
-                input.setAttribute('checked', 'checked')
-            }else {
-                input.removeAttribute('checked')
-            }
-        })
-    },[value])
 
     return <div className={s.options}>{mappedOptions}</div>
 }
