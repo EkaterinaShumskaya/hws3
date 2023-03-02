@@ -52,7 +52,7 @@ function HW2() {
     const filteredAffairs = filterAffairs(affairs, filter)
     const deleteAffairCallback = (_id: number) => {
         return deleteAffair(filteredAffairs, _id)
-        // setAffairs(deleteAffair(filteredAffairs, _id))
+      // return   setAffairs(deleteAffair(filteredAffairs, _id))
     }
 
     return (
