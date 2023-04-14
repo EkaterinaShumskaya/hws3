@@ -21,13 +21,9 @@ type TechType = {
     developer: string
 }
 
-type getTechsParams = {
-    sort: string
-    page: number
-    count: number
-}
 
-const getTechs = (params: getTechsParams) => {
+
+const getTechs = (params: any) => {
     return axios
         .get<{ techs: TechType[], totalCount: number }>(
             ' https://samurai.it-incubator.io/api/3.0/homework/test3',
@@ -39,7 +35,7 @@ const getTechs = (params: getTechsParams) => {
 }
 
 const HW15 = () => {
-    const [sort, setSort] = useState('') // 0tech
+    const [sort, setSort] = useState('')
     const [page, setPage] = useState(1)
     const [count, setCount] = useState(4)
     const [idLoading, setLoading] = useState(false)
@@ -47,7 +43,7 @@ const HW15 = () => {
     const [searchParams, setSearchParams] = useSearchParams()
     const [techs, setTechs] = useState<TechType[]>([])
 
-    const sendQuery = (params: getTechsParams) => {
+    const sendQuery = (params: any) => {
         setLoading(true)
         getTechs(params)
             .then((res) => {
@@ -71,16 +67,14 @@ const HW15 = () => {
         setCount(newCount)
         // setPage(
         // setCount(
-        sendQuery({
-            page,
-            sort,
-            count
-        })
-        setSearchParams({
-            page:String(page),
-            sort,
-            count:String(count)
-        })
+        const pageQuery: { page?: string } = newPage !== 1 ? {page: newPage + ''} : {} // если стандарт - то не записывать в урл
+        const countQuery: { count?: string } = newCount !== 4 ? {count: newCount + ''} : {} // если стандарт - то не записывать в урл
+        const {count, page, ...lastQueries} = Object.fromEntries(searchParams)
+
+        const allQuery = {...lastQueries, ...pageQuery, ...countQuery}
+        sendQuery(allQuery)
+        setSearchParams(allQuery)
+
         // sendQuery(
         // setSearchParams(
 
@@ -93,24 +87,22 @@ const HW15 = () => {
         setPage(1)
         // setSort(
         // setPage(1) // при сортировке сбрасывать на 1 страницу
-        sendQuery({
-            page,
-            sort,
-            count
-        })
-        setSearchParams({
-            sort
-        })
+
+        const sortQuery: { sort?: string } = newSort !== '' ? {sort: newSort} : {} // если стандарт - то не записывать в урл
+        const {sort, page, ...lastQueries} = Object.fromEntries(searchParams)
+
+        const allQuery = {...lastQueries, ...sortQuery}
+        sendQuery(allQuery)
+        setSearchParams(allQuery)
         //  sendQuery(techs)
         // setSearchParams(
 
         //
     }
 
-
     useEffect(() => {
         const params = Object.fromEntries(searchParams)
-        sendQuery({page: +params.page, count: +params.count, sort})
+        sendQuery({page: params.page, count: params.count})
         setPage(+params.page || 1)
         setCount(+params.count || 4)
     }, [])
